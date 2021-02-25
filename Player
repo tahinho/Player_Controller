@@ -1,0 +1,153 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+
+public class PLAYER_Controll : MonoBehaviour
+{
+
+    Animator animator;
+
+    //public CharacterController controller;
+
+    public float speed = 25;
+    public float runspeed = 25;
+    public float rotationSpeed = 10;
+
+
+    Vector3 moveDirection;
+    Rigidbody rb;
+
+    public float Health;
+
+    public Slider slider;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        slider.value = 300;
+        Health = slider.value;
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+        bool forwardpressed = Input.GetKey("w");
+        bool totheright = Input.GetKey("d");
+        bool totheleft = Input.GetKey("a");
+        bool Jump = Input.GetKey("space");
+        bool backward = Input.GetKey("s");
+        bool fire = Input.GetKey("x");
+        bool run = Input.GetKey("r");
+        bool kick = Input.GetKey("c");
+        bool punch = Input.GetKey("y");
+
+        if (Input.GetAxis("Mouse X") < 0)
+            transform.Rotate(Vector3.up * -rotationSpeed);
+        if (Input.GetAxis("Mouse X") > 0)
+            transform.Rotate(Vector3.up * rotationSpeed);
+
+        float Horizontal = Input.GetAxis("Horizontal");
+        float Vertical = Input.GetAxis("Vertical");
+        moveDirection = transform.forward * Vertical * speed + transform.right * Horizontal * speed;
+
+
+
+        if (forwardpressed)
+        {
+            animator.SetBool("isWalking", true);
+
+        }
+        if (!forwardpressed)
+        {
+            animator.SetBool("isWalking", false);
+        }
+        if (run)
+        {
+            animator.SetBool("isRunning", true);
+            moveDirection = transform.forward * Vertical * runspeed + transform.right * Horizontal * runspeed;
+
+        }
+        if (kick)
+        {
+            animator.SetBool("Kick", true);
+
+        }
+        if (!kick)
+        {
+            animator.SetBool("Kick", false);
+        }
+        if (punch)
+        {
+            animator.SetBool("Punch", true);
+
+        }
+        if (!punch)
+        {
+            animator.SetBool("Punch", false);
+        }
+        if (!run)
+        {
+            animator.SetBool("isRunning", false);
+        }
+        if (fire)
+        {
+            animator.SetBool("fireball", true);
+
+        }
+        if (!fire)
+        {
+            animator.SetBool("fireball", false);
+        }
+        if (totheright)
+        {
+            animator.SetBool("toTheRight", true);
+        }
+        if (!totheright)
+        {
+            animator.SetBool("toTheRight", false);
+        }
+        if (totheleft)
+        {
+            animator.SetBool("toTheLeft", true);
+        }
+        if (!totheleft)
+        {
+            animator.SetBool("toTheLeft", false);
+        }
+        if (Jump)
+        {
+            animator.SetBool("isJumping", true);
+        }
+        if (!Jump)
+        {
+            animator.SetBool("isJumping", false);
+        }
+        if (backward)
+        {
+            animator.SetBool("Backward", true);
+
+        }
+        if (!backward)
+        {
+            animator.SetBool("Backward", false);
+        }
+
+
+    }
+    void FixedUpdate()
+    {
+        Move(moveDirection);
+    }
+    void Move(Vector3 dir)
+    {
+        rb.MovePosition(transform.position + dir * Time.fixedDeltaTime);
+    }
+}
